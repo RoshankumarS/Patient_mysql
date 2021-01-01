@@ -45,7 +45,7 @@ public class PatientServiceImpl implements IPatientService {
 	@Override
 	public List<Patient> getPatientData(Patient patient){
 		List<Patient> patientList = patientRepo.findAll();
-		if(patient.getName() == null && patient.getDob() == null && patient.getName() == null) {
+		if(patient.getName() == null && patient.getDob() == null && patient.getPhone() == null) {
 			return patientList;
 		}else {
 			Predicate<Patient> filterPredicate = p -> p.getName().equals(patient.getName()) && p.getDob().equals(patient.getDob()) && p.getPhone().equals(patient.getPhone());
@@ -53,7 +53,7 @@ public class PatientServiceImpl implements IPatientService {
 				filterPredicate = p -> p.getDob().equals(patient.getDob()) && p.getPhone().equals(patient.getPhone());
 				if(patient.getDob() == null) {
 					filterPredicate = p -> p.getPhone().equals(patient.getPhone());
-				} else {
+				} else if(patient.getPhone() == null){
 					filterPredicate = p -> p.getDob().equals(patient.getDob());
 				}
 			} else if(patient.getDob() == null) {
@@ -61,7 +61,7 @@ public class PatientServiceImpl implements IPatientService {
 				if(patient.getPhone() == null) {
 					filterPredicate = p -> p.getName().equals(patient.getName());
 				}
-			} else {
+			} else if(patient.getPhone() == null){
 				filterPredicate = p -> p.getName().equals(patient.getName()) && p.getDob().equals(patient.getDob());
 			}
 			List<Patient> filterPatientList = patientList.stream().filter(filterPredicate).collect(Collectors.toList());
