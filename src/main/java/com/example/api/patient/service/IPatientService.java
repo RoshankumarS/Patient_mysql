@@ -1,14 +1,15 @@
 package com.example.api.patient.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import com.example.api.patient.pojo.Patient;
+import com.example.api.common.pojo.Patient;
 
 public interface IPatientService {
 
 	public String saveData(List<Patient> patientList);
 	
-	public List<Patient> getPatientData(Patient patient);
+	public Optional<Patient> getPatientData(int patientId);
 
 	public String updatePatientData(Patient patient);
 	

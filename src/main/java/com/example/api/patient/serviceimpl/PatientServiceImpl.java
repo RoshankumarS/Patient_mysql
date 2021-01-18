@@ -1,17 +1,16 @@
 package com.example.api.patient.serviceimpl;
 
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.Optional;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.example.api.patient.dao.PatientRepo;
+import com.example.api.common.dao.PatientRepo;
+import com.example.api.common.pojo.Patient;
 import com.example.api.patient.exception.PatientException;
-import com.example.api.patient.pojo.Patient;
 import com.example.api.patient.service.IPatientService;
 
 @Service
@@ -43,31 +42,37 @@ public class PatientServiceImpl implements IPatientService {
 	}
 	
 	@Override
-	public List<Patient> getPatientData(Patient patient){
-		List<Patient> patientList = patientRepo.findAll();
-		if(patient.getName() == null && patient.getDob() == null && patient.getPhone() == null) {
-			return patientList;
-		}else {
-			Predicate<Patient> filterPredicate = p -> p.getName().equals(patient.getName()) && p.getDob().equals(patient.getDob()) && p.getPhone().equals(patient.getPhone());
-			if(patient.getName() == null) {
-				filterPredicate = p -> p.getDob().equals(patient.getDob()) && p.getPhone().equals(patient.getPhone());
-				if(patient.getDob() == null) {
-					filterPredicate = p -> p.getPhone().equals(patient.getPhone());
-				} else if(patient.getPhone() == null){
-					filterPredicate = p -> p.getDob().equals(patient.getDob());
-				}
-			} else if(patient.getDob() == null) {
-				filterPredicate = p -> p.getName().equals(patient.getName()) && p.getPhone().equals(patient.getPhone());
-				if(patient.getPhone() == null) {
-					filterPredicate = p -> p.getName().equals(patient.getName());
-				}
-			} else if(patient.getPhone() == null){
-				filterPredicate = p -> p.getName().equals(patient.getName()) && p.getDob().equals(patient.getDob());
-			}
-			List<Patient> filterPatientList = patientList.stream().filter(filterPredicate).collect(Collectors.toList());
-			return filterPatientList;
-		}
+	public Optional<Patient> getPatientData(int patientId){
+		Optional<Patient> patient = patientRepo.findById(patientId);
+		return patient;
 	}
+	
+//	@Override
+//	public List<Patient> getPatientData(Patient patient){
+//		List<Patient> patientList = patientRepo.findAll();
+//		if(patient.getName() == null && patient.getDob() == null && patient.getPhone() == null) {
+//			return patientList;
+//		}else {
+//			Predicate<Patient> filterPredicate = p -> p.getName().equals(patient.getName()) && p.getDob().equals(patient.getDob()) && p.getPhone().equals(patient.getPhone());
+//			if(patient.getName() == null) {
+//				filterPredicate = p -> p.getDob().equals(patient.getDob()) && p.getPhone().equals(patient.getPhone());
+//				if(patient.getDob() == null) {
+//					filterPredicate = p -> p.getPhone().equals(patient.getPhone());
+//				} else if(patient.getPhone() == null){
+//					filterPredicate = p -> p.getDob().equals(patient.getDob());
+//				}
+//			} else if(patient.getDob() == null) {
+//				filterPredicate = p -> p.getName().equals(patient.getName()) && p.getPhone().equals(patient.getPhone());
+//				if(patient.getPhone() == null) {
+//					filterPredicate = p -> p.getName().equals(patient.getName());
+//				}
+//			} else if(patient.getPhone() == null){
+//				filterPredicate = p -> p.getName().equals(patient.getName()) && p.getDob().equals(patient.getDob());
+//			}
+//			List<Patient> filterPatientList = patientList.stream().filter(filterPredicate).collect(Collectors.toList());
+//			return filterPatientList;
+//		}
+//	}
 	
 	@Override
 	public String updatePatientData(Patient patient) {
